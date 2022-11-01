@@ -1,12 +1,12 @@
 import { CreateDateColumn, PrimaryGeneratedColumn } from "typeorm";
 
 export class BaseEntity{
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('uuid')
     id?: number;
 
-    @CreateDateColumn({nullable:true})
-    createAt?: Date;
-    
-    @CreateDateColumn({nullable:true})
-    updateAt?: Date;
+    // @CreateDateColumn({nullable:true})
+    // createAt?: Date;
+
+    // @CreateDateColumn({nullable:true})
+    // updateAt?: Date;
 }
