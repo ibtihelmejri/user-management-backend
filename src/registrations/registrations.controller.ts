@@ -1,16 +1,18 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { AuthCredentialsDto } from './dto/auth-credentiels.dto';
-import { RegistrationsService } from './registrations.service';
+import { Body, Controller, Post } from "@nestjs/common";
+import { AuthCredentialsDto } from "./dto/auth-credentiels.dto";
+import { RegistrationsService } from "./registrations.service";
 
-@Controller('registrations')
+@Controller("api")
 export class RegistrationsController {
-    constructor(private readonly registrationsService: RegistrationsService) { }
+  constructor(private readonly registrationsService: RegistrationsService) {}
 
+  @Post("/register")
+  create(@Body() authCredentialsDto: AuthCredentialsDto) {
+    return this.registrationsService.signup(authCredentialsDto);
+  }
 
-    @Post()
-    create(
-      @Body() authCredentialsDto: AuthCredentialsDto,
-    ) {
-      return this.registrationsService.create(authCredentialsDto);
-    }
+  @Post("/login")
+  signIn(@Body() authCredentialsDto: AuthCredentialsDto) {
+    return this.registrationsService.signIn(authCredentialsDto);
+  }
 }
