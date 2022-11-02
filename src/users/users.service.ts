@@ -10,6 +10,7 @@ export class UsersService {
     @InjectRepository(User)
     private userRepo: Repository<User>
   ) {}
+  
   async create(createUserDto: CreateUserDto): Promise<any> {
     try {
       let newUser = this.userRepo.create(createUserDto);
@@ -21,8 +22,7 @@ export class UsersService {
   }
 
   async findAll() {
-    let users = await this.userRepo.find({
-    });
+    let users = await this.userRepo.find({});
     return users;
   }
 }
