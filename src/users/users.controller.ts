@@ -1,24 +1,22 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UsersService } from './users.service';
+import { Body, Controller, Get, Post } from "@nestjs/common";
+import { ApiCreatedResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger";
+import { CreateUserDto } from "./dto/create-user.dto";
+import { User } from "./users.entity";
+import { UsersService } from "./users.service";
 
-@Controller('users')
+@ApiTags("users")
+@Controller("api/users")
 export class UsersController {
-    constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
-
-    @Post()
-    create(
-      @Body() createUserDto: CreateUserDto,
-    ) {
-      return this.usersService.create(createUserDto);
-    }
-
-
-    @Get('')
-    findAll() {
-      return this.usersService.findAll();
-    }
-  
-  
+  @ApiCreatedResponse({ type: User })
+  @Post()
+  create(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.create(createUserDto);
+  }
+@ApiOkResponse({type: User, isArray: true})
+  @Get()
+  findAll() {
+    return this.usersService.findAll();
+  }
 }
