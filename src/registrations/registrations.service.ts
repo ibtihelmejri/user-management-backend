@@ -9,12 +9,16 @@ import { Repository } from "typeorm";
 import { AuthCredentialsDto } from "./dto/auth-credentiels.dto";
 import { Registration } from "./registrations.entity";
 import * as bcrypt from "bcrypt";
+import { JwtService } from '@nestjs/jwt';
+import { JwtPayload } from "./jwt-payload.interface";
+
 
 @Injectable()
 export class RegistrationsService {
   constructor(
     @InjectRepository(Registration)
-    private registrationRepo: Repository<Registration>
+    private registrationRepo: Repository<Registration>,
+    private jwtService: JwtService,
   ) {}
 
   async signup(authCredentialsDto: AuthCredentialsDto): Promise<any> {
@@ -45,7 +49,7 @@ export class RegistrationsService {
     }
   }
 
- async signIn(authCredentialsDto: AuthCredentialsDto): Promise<string>  {
+ async signIn(authCredentialsDto: AuthCredentialsDto): Promise<{accessToken:string}>  {
     const {email, password} = authCredentialsDto;
     const register = await this.registrationRepo
     .createQueryBuilder('registration')
@@ -53,9 +57,13 @@ export class RegistrationsService {
     .addSelect('registration.password')
     .where({ email })
     .getOne();
-    console.log();
+  
+    
     if (register && (await bcrypt.compare(password, register.password))) {
-        return 'success'
+      
+        const payload: JwtPayload = {email};
+        const accessToken : string = await this.jwtService.sign(payload)
+        return {accessToken}
         // let payload = await this.getTokenPayload(user);
         // let accessToken: string;
         // if (user.roleId === Role.SAL) {
@@ -67,6 +75,7 @@ export class RegistrationsService {
         // }
         // return { accessToken };
       } else {
+        
         throw new UnauthorizedException({
           error: 'Unauthorized',
           message: 'Please check your login credentials',
